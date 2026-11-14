@@ -50,7 +50,12 @@ public final class SettingsLoader {
             }
         }
 
-        Settings settings = new Settings(Math.round(cooldown * 1000), velocity, any, worlds);
+        boolean land = true;
+        if (config.contains("hop-from-land")) {
+            if (config.isBoolean("hop-from-land")) land = config.getBoolean("hop-from-land");
+            else warnings.add("hop-from-land must be true or false, so it stays true.");
+        }
+        Settings settings = new Settings(Math.round(cooldown * 1000), velocity, any, worlds, land);
         return new Result(settings, warnings);
     }
 

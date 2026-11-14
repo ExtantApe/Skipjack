@@ -92,4 +92,13 @@ class SettingsLoaderTest {
         assertTrue(s.isWorldDisabled("LOBBY"));
         assertFalse(s.isWorldDisabled("world"));
     }
+
+    @Test
+    void hoppingFromLandIsOnByDefaultAndCanBeTurnedOff() throws Exception {
+        assertTrue(Settings.defaults().fromLand());
+        assertFalse(load("hop-from-land: false").settings().fromLand());
+        SettingsLoader.Result bad = load("hop-from-land: maybe");
+        assertTrue(bad.settings().fromLand());
+        assertFalse(bad.warnings().isEmpty());
+    }
 }

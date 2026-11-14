@@ -9,5 +9,9 @@ hop-velocity: 0.32
 # false: only the driver (the first passenger) can hop the boat. true: any passenger can.
 any-passenger: false
 
+# true: a boat on solid ground can hop too, so it can hop up a shore onto land and back into the water. On land it
+# moves at the game's own (slow) land speed. false: only from water or ice.
+hop-from-land: true
+
 # Worlds where boats can't hop. Use the world's folder name, for example world_nether.
 disabled-worlds: []

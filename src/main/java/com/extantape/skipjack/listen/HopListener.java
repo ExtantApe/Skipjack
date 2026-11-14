@@ -53,7 +53,7 @@ public final class HopListener implements Listener {
         boolean driver = !seats.isEmpty() && seats.get(0).equals(player);
         Vector velocity = boat.getVelocity();
         HopTracker.Request request = new HopTracker.Request(boat.getWorld().getName(),
-                player.hasPermission(PERMISSION), driver, onWaterOrIce(boat), boat.getY(), velocity.getY(),
+                player.hasPermission(PERMISSION), driver, canPush(boat, settings.get()), boat.getY(), velocity.getY(),
                 System.currentTimeMillis());
 
         HopTracker.Decision decision = tracker.decide(boat.getUniqueId(), settings.get(), request);
@@ -82,12 +82,20 @@ public final class HopListener implements Listener {
                     cancel();
                     return;
                 }
-                if (Landing.hasLanded(onWaterOrIce(boat), boat.getVelocity().getY(), ticks)) {
+                if (Landing.hasLanded(canPush(boat, settings.get()), boat.getVelocity().getY(), ticks)) {
                     tracker.landed(boat.getUniqueId(), boat.getY());
                     cancel();
                 }
             }
         }.runTaskTimer(plugin, 1L, 1L);
+    }
+
+    /**
+     * True when the boat has something to push off: water or ice, or with hop-from-land, solid ground. Land lets a boat
+     * hop up a shore and back into the water; on land it moves at the game's own land speed.
+     */
+    static boolean canPush(Boat boat, Settings s) {
+        return onWaterOrIce(boat) || (s.fromLand() && boat.isOnGround());
     }
 
     /** True when the block at the boat's base, or the one just under it, is water or ice. */

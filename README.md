@@ -1,6 +1,6 @@
 # Skipjack
 
-Skipjack for Paper: press jump in a boat for a small hop over a block or ice ridge. Vanilla clients, no speed or damage change.
+Skipjack for Paper: press jump in a boat to hop a block or an ice ridge, and drive at water speed on land. Vanilla clients, no mods.
 
 **Status:** 0.1.0. Unit-tested, and run with bots on a copy of a real server on Paper 26.2 and 26.3 build 249 (2026-11-14): the hop and its cooldown work, and a boat on land goes 8 blocks a second. It hasn't been tried in a real game client, so the hop height may still need tuning with `hop-velocity`.
 

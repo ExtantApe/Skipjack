@@ -1,0 +1,13 @@
+# Skipjack: press jump in a boat for a small hop.
+
+# Seconds a boat must wait between hops. Allowed range 0.2 to 10.
+cooldown-seconds: 1.2
+
+# Upward speed of the hop, in blocks per tick. 0.32 clears about one block. Allowed range 0.1 to 0.6.
+hop-velocity: 0.32
+
+# false: only the driver (the first passenger) can hop the boat. true: any passenger can.
+any-passenger: false
+
+# Worlds where boats can't hop. Use the world's folder name, for example world_nether.
+disabled-worlds: []

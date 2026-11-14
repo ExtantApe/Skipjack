@@ -101,4 +101,15 @@ class SettingsLoaderTest {
         assertTrue(bad.settings().fromLand());
         assertFalse(bad.warnings().isEmpty());
     }
+
+    @Test
+    void landSpeedIsWaterSpeedByDefaultAndTakesANumberOrVanilla() throws Exception {
+        assertEquals(Settings.WATER_SPEED, Settings.defaults().landSpeed());
+        assertEquals(Settings.WATER_SPEED, load("land-speed: water").settings().landSpeed());
+        assertEquals(5.5, load("land-speed: 5.5").settings().landSpeed());
+        assertEquals(0, load("land-speed: vanilla").settings().landSpeed());
+        assertEquals(Settings.MAX_LAND_SPEED, load("land-speed: 99").settings().landSpeed());
+        assertFalse(load("land-speed: 99").warnings().isEmpty());
+        assertEquals(Settings.WATER_SPEED, load("land-speed: zoom").settings().landSpeed());
+    }
 }

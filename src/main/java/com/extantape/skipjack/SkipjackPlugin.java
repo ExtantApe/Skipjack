@@ -15,6 +15,8 @@ public final class SkipjackPlugin extends JavaPlugin {
         SettingsLoader.Result loaded = SettingsLoader.load(getConfig());
         settings = loaded.settings();
         for (String warning : loaded.warnings()) getLogger().warning(warning);
-        getServer().getPluginManager().registerEvents(new HopListener(this, () -> settings), this);
+        HopListener listener = new HopListener(this, () -> settings);
+        getServer().getPluginManager().registerEvents(listener, this);
+        listener.startLandDriving();
     }
 }

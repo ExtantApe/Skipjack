@@ -55,7 +55,18 @@ public final class SettingsLoader {
             if (config.isBoolean("hop-from-land")) land = config.getBoolean("hop-from-land");
             else warnings.add("hop-from-land must be true or false, so it stays true.");
         }
-        Settings settings = new Settings(Math.round(cooldown * 1000), velocity, any, worlds, land);
+        double landSpeed = Settings.WATER_SPEED;
+        if (config.contains("land-speed")) {
+            String raw = String.valueOf(config.get("land-speed")).trim().toLowerCase(java.util.Locale.ROOT);
+            if (raw.equals("water")) landSpeed = Settings.WATER_SPEED;
+            else if (raw.equals("vanilla") || raw.equals("off") || raw.equals("false")) landSpeed = 0;
+            else if (config.isDouble("land-speed") || config.isInt("land-speed")) {
+                double v = config.getDouble("land-speed");
+                landSpeed = Math.max(0, Math.min(Settings.MAX_LAND_SPEED, v));
+                if (landSpeed != v) warnings.add("land-speed must be 0 to " + Settings.MAX_LAND_SPEED + " blocks a second, so it's " + landSpeed + ".");
+            } else warnings.add("land-speed must be water, vanilla or a number of blocks a second, so it stays water (8).");
+        }
+        Settings settings = new Settings(Math.round(cooldown * 1000), velocity, any, worlds, land, landSpeed);
         return new Result(settings, warnings);
     }
 

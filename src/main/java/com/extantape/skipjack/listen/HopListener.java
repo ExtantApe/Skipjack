@@ -42,9 +42,39 @@ public final class HopListener implements Listener {
         this.settings = settings;
     }
 
+    /** Drivers holding forward or back right now, for land driving. Only these are looked at each tick. */
+    private final java.util.Map<java.util.UUID, org.bukkit.Input> driving = new java.util.concurrent.ConcurrentHashMap<>();
+    private org.bukkit.scheduler.BukkitTask landTask;
+
+    /** Starts the land-driving tick, which only looks at players holding forward or back in a boat. */
+    public void startLandDriving() {
+        if (landTask != null) return;
+        landTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                Settings s = settings.get();
+                if (s.landSpeed() <= 0 || driving.isEmpty()) return;
+                for (var e : driving.entrySet()) {
+                    Player p = plugin.getServer().getPlayer(e.getKey());
+                    if (p == null || !(p.getVehicle() instanceof Boat boat)) continue;
+                    if (s.isWorldDisabled(boat.getWorld().getName()) || !p.hasPermission(PERMISSION)) continue;
+                    List<Entity> seats = boat.getPassengers();
+                    if (seats.isEmpty() || !seats.get(0).equals(p)) continue;
+                    if (onWaterOrIce(boat) || !boat.isOnGround()) continue;   // water and air: the game's own physics
+                    double[] v = com.extantape.skipjack.rules.LandDrive.velocity(boat.getLocation().getYaw(),
+                            e.getValue().isForward(), e.getValue().isBackward(), s.landSpeed());
+                    if (v != null) boat.setVelocity(new Vector(v[0], boat.getVelocity().getY(), v[1]));
+                }
+            }
+        }.runTaskTimer(plugin, 1L, 1L);
+    }
+
     @EventHandler
     public void onInput(PlayerInputEvent event) {
         Player player = event.getPlayer();
+        org.bukkit.Input in = event.getInput();
+        if ((in.isForward() || in.isBackward()) && player.getVehicle() instanceof Boat) driving.put(player.getUniqueId(), in);
+        else driving.remove(player.getUniqueId());
         // Always track the key, so a press made on foot and held while boarding doesn't count as a new press.
         if (!edge.press(player.getUniqueId(), event.getInput().isJump())) return;
         if (!(player.getVehicle() instanceof Boat boat)) return;
@@ -67,6 +97,7 @@ public final class HopListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         edge.forget(event.getPlayer().getUniqueId());
+        driving.remove(event.getPlayer().getUniqueId());
     }
 
     /** Checks the boat each tick until it lands, which is the only polling, and only for a boat that just hopped. */

@@ -1,0 +1,10 @@
+name: Skipjack
+version: '${version}'
+main: com.extantape.skipjack.SkipjackPlugin
+api-version: '26.1'
+description: Press jump in a boat for a small hop, only from water or ice.
+website: https://github.com/ExtantApe/Skipjack
+permissions:
+  skipjack.hop:
+    description: Hop a boat by pressing jump.
+    default: true

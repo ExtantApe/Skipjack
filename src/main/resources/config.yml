@@ -1,0 +1,22 @@
+# Skipjack: press jump in a boat for a small hop.
+
+# Seconds a boat must wait between hops. Allowed range 0.2 to 10.
+cooldown-seconds: 1.2
+
+# Upward speed of the hop, in blocks per tick. 0.32 clears about one block. Allowed range 0.1 to 0.6.
+hop-velocity: 0.32
+
+# false: only the driver (the first passenger) can hop the boat. true: any passenger can.
+any-passenger: false
+
+# true: a boat on solid ground can hop too, so it can hop up a shore onto land and back into the water. On land it
+# moves at the game's own (slow) land speed. false: only from water or ice.
+hop-from-land: true
+
+# How fast a boat goes on land while its driver holds forward, in blocks per second. "water" (the default) is about a
+# boat's top speed on water, 8. A number from 0 to 20 sets it; "vanilla" or 0 leaves the game's own slow land speed.
+# Reversing goes at half. Only the driver steers, and only on solid ground; water, ice and the air are left alone.
+land-speed: water
+
+# Worlds where boats can't hop. Use the world's folder name, for example world_nether.
+disabled-worlds: []
